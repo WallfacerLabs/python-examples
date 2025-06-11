@@ -274,49 +274,23 @@ def run_example_implementation():
     print('\n📈 1. Finding best deposit options...')
     top_options = get_best_deposit_options(client)
     
-    # 2. Generate a deposit transaction (if we have deposit options)
-    user_balances = top_options.get('userBalances', []) if top_options else []
-    if user_balances and len(user_balances) > 0:
-        first_asset = user_balances[0]
-        deposit_options = first_asset.get('depositOptions', [])
-        
-        if len(deposit_options) >= 3:  # Use 3rd vault (index 2)
-            first_deposit_option = deposit_options[2]
-            vault_name = first_deposit_option.get('name', 'Unknown vault')
-            print(f'\n💳 2. Generating deposit transaction into {vault_name}...')
-            
-            # Extract vault address and asset address from the deposit option
-            vault_address = first_deposit_option.get('address')
-            asset_address = first_asset.get('asset', {}).get('address')
-            
-            # Extract network string from the deposit option
-            network = 'mainnet'  # Default
-            if first_deposit_option.get('network'):
-                network_data = first_deposit_option.get('network')
-                if isinstance(network_data, str):
-                    network = network_data
-                elif isinstance(network_data, dict):
-                    network = network_data.get('name', 'mainnet')
-            
-            if vault_address and asset_address:
-                amount = '1000000'  # 1 USDC (6 decimals)
-                
-                generate_deposit_transaction_with_asset(
-                    client,
-                    vault_address,
-                    amount,
-                    USER_ADDRESS,
-                    network,
-                    asset_address
-                )
-            else:
-                print('❌ Could not find vault address or asset address in deposit option')
-                print(f'Vault address: {vault_address}')
-                print(f'Asset address: {asset_address}')
-        else:
-            print('❌ Not enough deposit options available (need at least 3)')
-    else:
-        print('❌ No deposit options available')
+    # 2. Generate a deposit transaction for Sky Savings USDS on Base
+    print(f'\n💳 2. Generating deposit transaction into Sky Savings USDS on Base...')
+    
+    # Hardcoded Sky Savings USDS vault details
+    sky_vault_address = '0x1601843c5E9bC251A3272907010AFa41Fa18347E'
+    usds_asset_address = '0x820c137fa70c8691f0e44dc420a5e53c168921dc'  # USDS token address on Base
+    network = 'base'
+    amount = '1000000000000000000'  # 1 USDS (18 decimals)
+    
+    generate_deposit_transaction_with_asset(
+        client,
+        sky_vault_address,
+        amount,
+        USER_ADDRESS,
+        network,
+        usds_asset_address
+    )
     
     # 3. View user positions
     print('\n💼 3. Checking user positions...')
